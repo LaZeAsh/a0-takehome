@@ -1,9 +1,10 @@
 "use client"; // Mark as a Client Component
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Define the expected structure of a diff object
-interface DiffItem {
+export interface DiffItem {
   id: string;
   description: string;
   diff: string;
@@ -25,6 +26,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [nextPage, setNextPage] = useState<number | null>(null);
   const [initialFetchDone, setInitialFetchDone] = useState<boolean>(false);
+  const router = useRouter();
 
   const fetchDiffs = async (page: number) => {
     setIsLoading(true);
@@ -127,6 +129,15 @@ export default function Home() {
                   </a>
                   <span className="ml-2">{item.description}</span>
                   {/* We won't display the full diff here, just the description */}
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("diffData", JSON.stringify(item));
+                      router.push(`/pr`);
+                    }}
+                    className="ml-2 px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                  >
+                    Analyze
+                  </button>
                 </li>
               ))}
             </ul>
